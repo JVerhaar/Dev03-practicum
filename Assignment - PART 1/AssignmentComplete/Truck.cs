@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace AssignmentComplete
 {
-  class Truck : ITruck
+	class Truck : ITruck
 	{
 		Vector2 position;
 		bool owner;
@@ -15,13 +15,13 @@ namespace AssignmentComplete
 		IContainer container;
 		Vector2 velocity;
 
-		public Truck(Vector2 position, Vector2 velocity, Texture2D truckdraw1, bool owner)
+		public Truck(Vector2 position, Vector2 velocity, Texture2D truckdraw, bool owner)
 		{
-			this.truckdraw = truckdraw1;
+			this.truckdraw = truckdraw;
 			this.owner = owner;
 			if (this.owner)
 			{
-				this.position = position + new Vector2(100,35);
+				this.position = position + new Vector2(100, 35);
 			}
 			this.velocity = velocity;
 		}
@@ -61,30 +61,48 @@ namespace AssignmentComplete
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			if(container != null)
+			if (container != null)
 			{
 				this.container.Draw(spriteBatch);
 			}
-			
-			if(this.owner == true)
+
+			if (this.owner == true)
 			{
 				spriteBatch.Draw(this.truckdraw, this.position, Color.HotPink);
 			}
 			else
 			{
-				spriteBatch.Draw(this.truckdraw, this.position, null, Color.White, 0.0f, new Vector2(0, 0), 1.0f , SpriteEffects.FlipHorizontally, 0.0f);
+				spriteBatch.Draw(this.truckdraw, this.position, null, Color.White, 0.0f, new Vector2(-500, -375), 1.0f, SpriteEffects.FlipHorizontally, 0.0f);
 			}
 		}
 
 		public void StartEngine()
 		{
-			velocity = new Vector2(40, 0);
+			if (owner == true)
+			{
+				velocity = new Vector2(40, 0);
+			}
+
+			else
+			{
+				velocity = new Vector2(-40, 0);
+			}
 		}
 
 		public void Update(float dt)
 		{
-			this.position = this.position + (this.velocity * dt);
-			this.container.Position = this.position + new Vector2(-12,-12);
+			if (owner == true)
+			{
+				this.position = this.position + (this.velocity * dt);
+				this.container.Position = this.position + new Vector2(-12, -12);
+			}
+
+			else
+			{
+				this.position = this.position + (this.velocity * dt);
+				this.container.Position = this.position + new Vector2(532, 355);
+			}
 		}
 	}
+
 }

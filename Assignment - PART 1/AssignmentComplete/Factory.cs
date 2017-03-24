@@ -65,7 +65,7 @@ namespace AssignmentComplete
 
 			public void Run()
 			{
-				mine.waitingTruck = new Truck(mine.position, new Vector2(0, 0), mine.truckTexture, true);
+				mine.waitingTruck = new Truck(mine.position, new Vector2(0, 0), mine.truckTexture, true);				
 			}
 		}
 
@@ -158,37 +158,37 @@ namespace AssignmentComplete
 			}
 			public void Run()
 			{
-				ikea.ProductsToShip.Add(CreateOreBox(ikea.Position + new Vector2(-80, 40 + -30 * ikea.ProductsToShip.Count)));
+				ikea.ProductsToShip.Add(CreateProductBox(ikea.Position + new Vector2(120, 20 + -30 * ikea.ProductsToShip.Count)));
 			}
 			Product CreateProductBox(Vector2 position) //protected
 			{
-				var box = new Product(100, ikea.oreBox);
+				var box = new Product(100, ikea.productBox);
 				box.Position = position;
 				return box;
 			}
 		}
 
-		Texture2D mine, oreContainer, oreBox, truckTexture;
+		Texture2D ikea, productContainer, productBox, truckTexture;
 		List<IStateMachine> processes;
 		ITruck waitingTruck;
 		bool isTruckReady = false;
 		Vector2 position;
 		List<IContainer> productsToShip;
 
-		public Mine(Vector2 position, Texture2D truck_texture, Texture2D mine, Texture2D ore_box, Texture2D ore_container)
+		public Ikea(Vector2 position, Texture2D truck_texture, Texture2D ikea, Texture2D product_box, Texture2D product_container)
 		{
 			processes = new List<IStateMachine>();
 			ProductsToShip = new List<IContainer>();
-			this.mine = mine;
+			this.ikea = ikea;
 			this.truckTexture = truck_texture;
-			this.oreContainer = ore_container;
-			this.oreBox = ore_box;
+			this.productContainer = product_container;
+			this.productBox = product_box;
 			this.position = position;
 
 
 			processes.Add( //statemachine
 			  new Repeat(new Seq(new Timer(50.0f),
-								 new Call(new AddOreBoxToMine(this)))));
+								 new Call(new AddProductstoIkea(this)))));
 
 			processes.Add(new Repeat(new Seq(new Wait(() => productsToShip.Count() == 5), new Call(new AddContainer(this)))));
 
@@ -196,31 +196,31 @@ namespace AssignmentComplete
 		}
 		class AddTruck : IAction
 		{
-			Mine mine;
-			public AddTruck(Mine mine)
+			Ikea ikea;
+			public AddTruck(Ikea ikea)
 			{
-				this.mine = mine;
+				this.ikea = ikea;
 			}
 
 			public void Run()
 			{
-				mine.waitingTruck = new Truck(mine.position, new Vector2(0, 0), mine.truckTexture, true);
+				ikea.waitingTruck = new Truck(ikea.position, new Vector2(0, 0), ikea.truckTexture, false);
 			}
 		}
 
 		class AddContainer : IAction
 		{
-			Mine mine;
-			public AddContainer(Mine mine)
+			Ikea ikea;
+			public AddContainer(Ikea ikea)
 			{
-				this.mine = mine;
+				this.ikea = ikea;
 			}
 
 			public void Run()
 			{
-				mine.waitingTruck.AddContainer(new OreContainer(5, mine.oreContainer));
-				mine.isTruckReady = true;
-				mine.productsToShip.Clear();
+				ikea.waitingTruck.AddContainer(new OreContainer(5, ikea.productContainer));
+				ikea.isTruckReady = true;
+				ikea.productsToShip.Clear();
 			}
 		}
 
@@ -262,9 +262,9 @@ namespace AssignmentComplete
 		{
 			foreach (var cart in productsToShip)
 			{
-				cart.Draw(spriteBatch);
+				cart.Draw(spriteBatch); //mijnkarretjes?
 			}
-			spriteBatch.Draw(mine, Position, Color.White);
+			spriteBatch.Draw(ikea, Position, Color.White);
 
 			if (waitingTruck != null)
 			{

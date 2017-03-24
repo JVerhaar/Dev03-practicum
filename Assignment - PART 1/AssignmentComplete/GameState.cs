@@ -20,13 +20,13 @@ namespace AssignmentComplete
     {
       this.background = background;
       factory1 = new Mine(new Vector2(100, 70), volvo, mine, mine_cart, ore_container);
-      factory2 = null;//new Ikea(new Vector2(600, 340), volvo, ikea, product_box, product_container);
+      factory2 = new Ikea(new Vector2(600, 340), volvo, ikea, product_box, product_container);
       processes = new List<IStateMachine>();
       trucks = new List<ITruck>();
 
       this.processes = new List<IStateMachine>();
       this.processes.Add(new Repeat(new Call(new AddTruckFromFactory(factory1, trucks))));
-      //this.processes.Add(new Repeat(new Call(new AddTruckFromFactory(factory2, trucks))));
+      this.processes.Add(new Repeat(new Call(new AddTruckFromFactory(factory2, trucks))));
 
 
     }
